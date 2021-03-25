@@ -1,7 +1,10 @@
 package model
 
 import (
+	"encoding/base64"
+	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
+	"log"
 	"tsuhaoblog/utils/errmsg"
 )
 
@@ -39,4 +42,37 @@ func GetUser(pageSize int, pageNum int) []User {
 	}
 	return users
 
+}
+
+func ScryptPW(password string) string {
+	//func Key(password, salt []byte, N, r, p, keyLen int) ([]byte, error)
+	keyLen := 10
+	salt := []byte{1, 2, 3, 4, 5, 6, 7, 8}
+
+	fpw, err := scrypt.Key([]byte(password), salt, 2048, 8, 1, keyLen)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return base64.StdEncoding.EncodeToString(fpw)
+}
+
+func EditUser(id int, data *User) int {
+	var user User
+	var maps = make(map[string]interface{})
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	err := db.Model(user).Where("id=?", id).Updates(maps).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+
+func DeleteUser(id int) int {
+	var user User
+	err := db.Where("id = ?", id).Delete(&user).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
 }
