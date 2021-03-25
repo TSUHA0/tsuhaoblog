@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	v1 "tsuhaoblog/api/v1"
 	"tsuhaoblog/utils"
 )
 
@@ -12,11 +12,16 @@ func InitRouter() {
 
 	router := r.Group("api/v1")
 	{
-		router.GET("hello", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": "ok",
-			})
-		})
+
+		//用户模块路由接口
+		router.POST("user/add", v1.AddUser)
+		router.GET("users", v1.GetUser)
+		router.PUT("user/:id", v1.EditUser)
+		router.DELETE("user/:id", v1.DeleteUser)
+		//文章模块路由接口
+
+		//分类模块路由接口
+
 	}
 	r.Run(utils.HttpPort)
 }
