@@ -16,6 +16,8 @@ const (
 	//code = 2000 Article Error
 
 	//code = 3000 Category Wrong
+	ERROR_CATENAME_USED = 3001
+	ERROR_CATE_NOT_EXIT = 3003
 )
 
 var codeMsg = map[int]string{
@@ -28,6 +30,8 @@ var codeMsg = map[int]string{
 	ERROR_TOKEN_RUNTIME:    "TOKEN过期",
 	ERROR_TOKEN_WRONG:      "TOKEN不正确",
 	ERROR_TOKEN_TYPE_WRONG: "TOKEN格式错误",
+	ERROR_CATENAME_USED:    "分类已存在",
+	ERROR_CATE_NOT_EXIT:    "分类不存在",
 }
 
 func GetErrMsg(code int) string {
