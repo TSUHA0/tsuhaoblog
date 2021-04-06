@@ -25,7 +25,30 @@ func AddCate(c *gin.Context) {
 
 //查询单个分类下的文章
 func GetCateArt(c *gin.Context) {
+	var art []model.Article
+	var total int64
+	cid, _ := strconv.Atoi(c.Param("cid"))
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
+	switch {
+	case pageSize >= 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
+	if pageNum == 0 {
+		pageNum = 1
+	}
+
+	art, total, code = model.GetCateArt(cid, pageSize, pageNum)
+	c.JSON(http.StatusOK, gin.H{
+		"data":    art,
+		"code":    code,
+		"message": errmsg.GetErrMsg(code),
+		"total":   total,
+	})
 }
 
 //查询分类列表

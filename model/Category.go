@@ -10,6 +10,7 @@ type Category struct {
 	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
 
+//添加分类
 func AddCategory(data *Category) int {
 
 	err := db.Create(data).Error
@@ -20,6 +21,7 @@ func AddCategory(data *Category) int {
 
 }
 
+//查询分类是否存在
 func CheckCate(name string) int {
 	var cate Category
 	db.Select("id").Where("name = ?", name).First(&cate)
@@ -41,6 +43,20 @@ func GetCateList(pageSize int, pageNum int) ([]Category, int64) {
 	return cate, total
 }
 
+//查询单个分类下的文章
+func GetCateArt(Cid int, pageSize int, pageNum int) ([]Article, int64, int) {
+	var arts []Article
+	var totalcnt int64
+	err := db.Preload("Category").Limit(pageSize).Offset(pageSize*(pageNum-1)).
+		Where("Cid = ?", Cid).Find(&arts).Error
+	db.Model(&arts).Where("Cid = ?", Cid).Count(&totalcnt)
+	if err != nil {
+		return nil, 0, errmsg.ERROR
+	}
+	return arts, totalcnt, errmsg.SUCCSE
+}
+
+//编辑分类
 func EditCate(id int, data *Category) int {
 	var cate Category
 	var maps = make(map[string]interface{})
@@ -52,6 +68,7 @@ func EditCate(id int, data *Category) int {
 	return errmsg.SUCCSE
 }
 
+//删除分类
 func DeleteCate(id int) int {
 	err := db.Where("id=?", id).Delete(&Category{}).Error
 	if err != nil {

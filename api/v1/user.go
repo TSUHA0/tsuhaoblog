@@ -42,14 +42,18 @@ func GetUser(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
-	if pageSize == 0 {
-		pageSize = -1
-	}
-	if pageNum == 0 {
-		pageNum = -1
+	switch {
+	case pageSize >= 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
 	}
 
-	data := model.GetUser(pageSize, pageNum)
+	if pageNum == 0 {
+		pageNum = 1
+	}
+
+	data, _ := model.GetUser(pageSize, pageNum)
 
 	code = errmsg.SUCCSE
 	c.JSON(http.StatusOK, gin.H{

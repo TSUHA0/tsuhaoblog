@@ -33,14 +33,14 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCSE
 }
 
-func GetUser(pageSize int, pageNum int) []User {
+func GetUser(pageSize int, pageNum int) ([]User, int) {
 	var users []User
 
 	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, errmsg.ERROR
 	}
-	return users
+	return users, errmsg.SUCCSE
 
 }
 
