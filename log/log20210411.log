@@ -1,0 +1,4 @@
+time="2021-04-11 16:54:31" level=info ClientIp=127.0.0.1 DataSize=213 HostName=TsuhaoLaptop-XX Method=POST SpendTime="32 ms" Status=200 URI=/api/v1/login usrAgent="ApiPOST Runtime +https://www.apipost.cn"
+time="2021-04-11 16:55:15" level=info ClientIp=127.0.0.1 DataSize=213 HostName=TsuhaoLaptop-XX Method=POST SpendTime="33 ms" Status=200 URI=/api/v1/login usrAgent="ApiPOST Runtime +https://www.apipost.cn"
+time="2021-04-11 17:00:40" level=info ClientIp=127.0.0.1 DataSize=213 HostName=TsuhaoLaptop-XX Method=POST SpendTime="33 ms" Status=200 URI=/api/v1/login usrAgent="ApiPOST Runtime +https://www.apipost.cn"
+time="2021-04-11 17:01:01" level=info ClientIp=127.0.0.1 DataSize=394 HostName=TsuhaoLaptop-XX Method=GET SpendTime="3 ms" Status=200 URI="/api/v1/users?pagesize=2&pagenum=1" usrAgent="ApiPOST Runtime +https://www.apipost.cn"

@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"tsuhaoblog/model"
 	"tsuhaoblog/utils/errmsg"
+	"tsuhaoblog/utils/validator"
 )
 
 var code int
@@ -14,14 +15,25 @@ var code int
 //添加用户
 func AddUser(c *gin.Context) {
 	var data model.User
+	var vds string
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
 		fmt.Println("ShouldBindJSON Error")
 		return
 	}
+
+	vds, code = validator.Validate(data)
+	if code != errmsg.SUCCSE {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"error":   vds,
+			"message": errmsg.GetErrMsg(code),
+		})
+		return
+	}
+
 	code = model.CheckUser(data.Username)
 	if code == errmsg.SUCCSE {
-		data.Password = model.ScryptPW(data.Password)
 		model.CreateUser(&data)
 	}
 	if code == errmsg.ERROR_USERNAME_USED {
@@ -30,15 +42,23 @@ func AddUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
-		"data":    data,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
 
 //查询单个用户
+func GetUser(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	user, code := model.GetUser(id)
+	c.JSON(http.StatusOK, gin.H{
+		"code":    code,
+		"message": errmsg.GetErrMsg(code),
+		"data":    user,
+	})
+}
 
 //查询用户列表
-func GetUser(c *gin.Context) {
+func GetUserList(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
@@ -53,12 +73,13 @@ func GetUser(c *gin.Context) {
 		pageNum = 1
 	}
 
-	data, _ := model.GetUser(pageSize, pageNum)
+	data, total, _ := model.GetUserList(pageSize, pageNum)
 
 	code = errmsg.SUCCSE
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 
@@ -80,7 +101,6 @@ func EditUser(c *gin.Context) {
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
-
 }
 
 //删除用户
@@ -92,4 +112,9 @@ func DeleteUser(c *gin.Context) {
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
+}
+
+//更改密码
+func EditPassword(c *gin.Context) {
+
 }

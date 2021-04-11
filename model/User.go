@@ -10,9 +10,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username"`
-	Password string `gorm:"type:varchar(20);not null" json:"password"`
-	Role     int    `gorm:"type:int" json:"role"`
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=4,max=12"`
+	Role     int    `gorm:"type:int" json:"role" validate:"required,gte=2"`
 }
 
 func CheckUser(name string) (code int) {
@@ -33,14 +33,24 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCSE
 }
 
-func GetUser(pageSize int, pageNum int) ([]User, int) {
-	var users []User
+func GetUser(id int) (User, int) {
+	var user User
+	err := db.Where("id=?", id).First(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR
+	}
+	return user, errmsg.SUCCSE
+}
 
+func GetUserList(pageSize int, pageNum int) ([]User, int64, int) {
+	var users []User
+	var total int64
 	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errmsg.ERROR
+		return nil, total, errmsg.ERROR
 	}
-	return users, errmsg.SUCCSE
+	db.Model(&users).Count(&total)
+	return users, total, errmsg.SUCCSE
 
 }
 
@@ -68,11 +78,48 @@ func EditUser(id int, data *User) int {
 	return errmsg.SUCCSE
 }
 
+//更改密码
+func EditPassword(data *User) int {
+
+	err := db.Model(&User{}).Select("password").Where("id = ?", data.ID).Updates(data).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+
 func DeleteUser(id int) int {
 	var user User
 	err := db.Where("id = ?", id).Delete(&user).Error
 	if err != nil {
 		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+
+func (u *User) BeforeCreate(_ *gorm.DB) (err error) {
+	u.Password = ScryptPW(u.Password)
+	u.Role = 2
+	return nil
+}
+
+func (u *User) BeforeUpdate(_ *gorm.DB) (err error) {
+	u.Password = ScryptPW(u.Password)
+	return nil
+}
+
+//后台登陆验证
+func CheckLogin(username string, password string) int {
+	var user User
+	db.Where("username = ?", username).First(&user)
+	if user.ID == 0 {
+		return errmsg.ERROR_USER_NOT_EXIT
+	}
+	if user.Role > 1 {
+		return errmsg.ERROR_USER_NO_PERMISSION
+	}
+	if user.Password != ScryptPW(password) {
+		return errmsg.ERROR_PASSWORD_WRONG
 	}
 	return errmsg.SUCCSE
 }

@@ -8,6 +8,7 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	JwtKey   string
 
 	Db         string
 	DbHost     string
@@ -15,6 +16,11 @@ var (
 	DbUser     string
 	DbPassWord string
 	DbName     string
+
+	AccessKey string
+	SecretKey string
+	Bucket    string
+	QnSever   string
 )
 
 func init() {
@@ -25,12 +31,21 @@ func init() {
 
 	LoadServer(file)
 	LoadData(file)
+	LoadQn(file)
+}
 
+func LoadQn(file *ini.File) {
+
+	AccessKey = file.Section("qn").Key("AccessKey").MustString("debug")
+	SecretKey = file.Section("qn").Key("SecretKey").MustString("debug")
+	Bucket = file.Section("qn").Key("Bucket").MustString("debug")
+	QnSever = file.Section("qn").Key("QnSever").MustString(":3000")
 }
 
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
+	JwtKey = file.Section("server").Key("HttpPort").MustString("tsUha0jwt")
 }
 
 func LoadData(file *ini.File) {
