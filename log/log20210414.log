@@ -1,0 +1,2 @@
+time="2021-04-14 00:39:35" level=info ClientIp="::1" DataSize=0 HostName=TsuhaoLaptop-XX Method=OPTIONS SpendTime="2 ms" Status=204 URI=/api/v1/login usrAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+time="2021-04-14 00:39:35" level=info ClientIp="::1" DataSize=68 HostName=TsuhaoLaptop-XX Method=POST SpendTime="10 ms" Status=200 URI=/api/v1/login usrAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"

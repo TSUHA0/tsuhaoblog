@@ -36,10 +36,10 @@ func init() {
 
 func LoadQn(file *ini.File) {
 
-	AccessKey = file.Section("qn").Key("AccessKey").MustString("debug")
-	SecretKey = file.Section("qn").Key("SecretKey").MustString("debug")
-	Bucket = file.Section("qn").Key("Bucket").MustString("debug")
-	QnSever = file.Section("qn").Key("QnSever").MustString(":3000")
+	AccessKey = file.Section("qn").Key("AccessKey").MustString("")
+	SecretKey = file.Section("qn").Key("SecretKey").MustString("")
+	Bucket = file.Section("qn").Key("Bucket").MustString("")
+	QnSever = file.Section("qn").Key("QnSever").MustString("")
 }
 
 func LoadServer(file *ini.File) {
