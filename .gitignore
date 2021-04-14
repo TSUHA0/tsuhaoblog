@@ -1,1 +1,4 @@
 /config/
+/log/
+/web/node_modules/
+/web/admin/node_modules/
