@@ -19,6 +19,7 @@ func InitRouter() {
 		auth.PUT("user/:id", v1.EditUser)
 		auth.DELETE("user/:id", v1.DeleteUser)
 		auth.GET("user/:id", v1.GetUser)
+		auth.PUT("changepwd/:id",v1.EditPassword)
 
 		//文章模块路由接口
 		auth.POST("art/add", v1.AddArt)

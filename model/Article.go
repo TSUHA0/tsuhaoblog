@@ -65,12 +65,13 @@ func GetArt(id int) (Article, int) {
 }
 
 //查询文章列表
-func GetArtList(pageSize int, pageNum int) ([]Article, int) {
+func GetArtList(pageSize int, pageNum int) ([]Article, int64,int) {
 	var art []Article
-
+	var total int64
 	err := db.Limit(pageSize).Offset(pageSize * (pageNum - 1)).Find(&art).Error
+	db.Model(&Article{}).Count(&total)
 	if err != nil {
-		return nil, errmsg.ERROR
+		return nil,total, errmsg.ERROR
 	}
-	return art, errmsg.SUCCSE
+	return art,total, errmsg.SUCCSE
 }

@@ -13,7 +13,7 @@ func Upload(c *gin.Context) {
 	if err != nil {
 		fmt.Println("err:", err)
 		c.JSON(http.StatusOK, gin.H{
-			"code": errmsg.ERROR,
+			"status": errmsg.ERROR,
 			"msg":  errmsg.GetErrMsg(errmsg.ERROR),
 		})
 		return
@@ -21,7 +21,7 @@ func Upload(c *gin.Context) {
 	fileSize := fileHeader.Size
 	url, code := upload.Upload(file, fileSize)
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
+		"status": code,
 		"msg":  errmsg.GetErrMsg(code),
 		"url":  url,
 	})

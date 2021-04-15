@@ -11,8 +11,8 @@ import (
 type User struct {
 	gorm.Model
 	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12"`
-	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=4,max=12"`
-	Role     int    `gorm:"type:int" json:"role" validate:"required,gte=2"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20"`
+	Role     int    `gorm:"type:int,default:2" json:"role" validate:"required,gte=2"`
 }
 
 func CheckUser(name string) (code int) {
@@ -42,14 +42,14 @@ func GetUser(id int) (User, int) {
 	return user, errmsg.SUCCSE
 }
 
-func GetUserList(pageSize int, pageNum int) ([]User, int64, int) {
+func GetUserList(username string,pageSize int, pageNum int) ([]User, int64, int) {
 	var users []User
 	var total int64
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	err := db.Model(User{}).Where("username LIKE ?",username+"%").Count(&total).
+		Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, total, errmsg.ERROR
 	}
-	db.Model(&users).Count(&total)
 	return users, total, errmsg.SUCCSE
 
 }
@@ -67,11 +67,15 @@ func ScryptPW(password string) string {
 }
 
 func EditUser(id int, data *User) int {
-	var user User
+	var user,other User
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
-	err := db.Model(user).Where("id=?", id).Updates(maps).Error
+	db.Select("id").Where("username = ?", data.Username).First(&other)
+	if other.ID >0 && other.ID != uint(id){
+		return errmsg.ERROR_USERNAME_USED
+	}
+	err := db.Model(&user).Where("id=?", id).Updates(maps).Error
 	if err != nil {
 		return errmsg.ERROR
 	}
@@ -79,9 +83,8 @@ func EditUser(id int, data *User) int {
 }
 
 //更改密码
-func EditPassword(data *User) int {
-
-	err := db.Model(&User{}).Select("password").Where("id = ?", data.ID).Updates(data).Error
+func EditPassword(id int,data *User) int {
+	err := db.Select("password").Where("id = ?", id).Updates(data).Error
 	if err != nil {
 		return errmsg.ERROR
 	}

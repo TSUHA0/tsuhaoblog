@@ -51,7 +51,7 @@ func GetUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	user, code := model.GetUser(id)
 	c.JSON(http.StatusOK, gin.H{
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 		"data":    user,
 	})
@@ -61,7 +61,7 @@ func GetUser(c *gin.Context) {
 func GetUserList(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
-
+	username := c.Query("username")
 	switch {
 	case pageSize >= 100:
 		pageSize = 100
@@ -73,9 +73,8 @@ func GetUserList(c *gin.Context) {
 		pageNum = 1
 	}
 
-	data, total, _ := model.GetUserList(pageSize, pageNum)
+	data, total, code := model.GetUserList(username,pageSize, pageNum)
 
-	code = errmsg.SUCCSE
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
@@ -90,14 +89,11 @@ func EditUser(c *gin.Context) {
 	var data model.User
 	id, _ := strconv.Atoi(c.Param("id"))
 	c.ShouldBindJSON(&data)
-	code = model.CheckUser(data.Username)
-	if code != errmsg.SUCCSE {
-		c.Abort()
-	} else {
-		model.EditUser(id, &data)
-	}
+
+	code = model.EditUser(id, &data)
 
 	c.JSON(http.StatusOK, gin.H{
+		"data":data,
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
@@ -116,5 +112,16 @@ func DeleteUser(c *gin.Context) {
 
 //更改密码
 func EditPassword(c *gin.Context) {
+	var user model.User
+	id, _ := strconv.Atoi(c.Param("id"))
+	c.ShouldBindJSON(&user)
+
+	code = model.EditPassword(id, &user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
 
 }
+

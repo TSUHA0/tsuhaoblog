@@ -112,7 +112,7 @@ func JwtToken() gin.HandlerFunc {
 		if err != nil {
 			if err == TokenExpired {
 				c.JSON(http.StatusOK, gin.H{
-					"status":  errmsg.ERROR,
+					"status":  errmsg.ERROR_TOKEN_RUNTIME,
 					"message": "token授权已过期,请重新登录",
 					"data":    nil,
 				})
@@ -121,7 +121,7 @@ func JwtToken() gin.HandlerFunc {
 			}
 			// 其他错误
 			c.JSON(http.StatusOK, gin.H{
-				"status":  errmsg.ERROR,
+				"status":  errmsg.ERROR_TOKEN_WRONG,
 				"message": err.Error(),
 				"data":    nil,
 			})

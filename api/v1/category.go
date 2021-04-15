@@ -45,7 +45,7 @@ func GetCateArt(c *gin.Context) {
 	art, total, code = model.GetCateArt(cid, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 		"total":   total,
 	})

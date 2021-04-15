@@ -15,7 +15,7 @@ func AddArt(c *gin.Context) {
 	code = model.AddArt(&art)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -27,7 +27,7 @@ func GetArt(c *gin.Context) {
 	art, code = model.GetArt(id)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -35,7 +35,7 @@ func GetArt(c *gin.Context) {
 //查询文章列表
 func GetArtList(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
-	pageNum, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
 	switch {
 	case pageSize >= 100:
@@ -47,6 +47,13 @@ func GetArtList(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = 1
 	}
+	art,total,code:=model.GetArtList(pageSize,pageNum)
+	c.JSON(http.StatusOK, gin.H{
+		"data":    art,
+		"status":    code,
+		"total":	total,
+		"message": errmsg.GetErrMsg(code),
+	})
 
 }
 
@@ -58,17 +65,17 @@ func EditArt(c *gin.Context) {
 	code = model.EditArt(id, &art)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
 
-//删除文章
+//删除文章z
 func DeleteArt(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code = model.DeleteArt(id)
 	c.JSON(http.StatusOK, gin.H{
-		"code":    code,
+		"status":    code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
