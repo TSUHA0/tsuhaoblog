@@ -23,11 +23,22 @@ func AddCate(c *gin.Context) {
 	})
 }
 
+//查询单个分类
+func GetCate(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	cate, code := model.GetCate(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":    code,
+		"message": errmsg.GetErrMsg(code),
+		"data":    cate,
+	})
+}
+
 //查询单个分类下的文章
 func GetCateArt(c *gin.Context) {
 	var art []model.Article
 	var total int64
-	cid, _ := strconv.Atoi(c.Param("cid"))
+	cid, _ := strconv.Atoi(c.Param("id"))
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
@@ -77,13 +88,8 @@ func EditCate(c *gin.Context) {
 	var data model.Category
 	id, _ := strconv.Atoi(c.Param("id"))
 	_ = c.ShouldBindJSON(&data)
-	code = model.CheckCate(data.Name)
-	if code == errmsg.SUCCSE {
-		model.EditCate(id, &data)
-	}
-	if code == errmsg.ERROR_CATENAME_USED {
-		c.Abort()
-	}
+
+	code = model.EditCate(id, &data)
 
 	c.JSON(
 		http.StatusOK, gin.H{

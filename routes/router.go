@@ -45,8 +45,9 @@ func InitRouter() {
 		router.GET("arts", v1.GetArtList)
 
 		//分类模块路由接口
-		router.GET("cate", v1.GetCateList)
-		router.GET("cateArt/:cid", v1.GetCateArt)
+		router.GET("cate/:id", v1.GetCate)
+		router.GET("cates", v1.GetCateList)
+		router.GET("cateArt/:id", v1.GetCateArt)
 
 		//登陆模块
 		router.POST("login", v1.Login)

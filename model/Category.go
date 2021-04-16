@@ -31,6 +31,16 @@ func CheckCate(name string) int {
 	return errmsg.SUCCSE
 }
 
+//查询单个分类
+func GetCate(id int) (Category, int) {
+	var cate Category
+	err := db.Where("id=?", id).First(&cate).Error
+	if err != nil {
+		return cate, errmsg.ERROR
+	}
+	return cate, errmsg.SUCCSE
+}
+
 //查询分类列表
 func GetCateList(pageSize int, pageNum int) ([]Category, int64) {
 	var cate []Category
@@ -58,9 +68,13 @@ func GetCateArt(Cid int, pageSize int, pageNum int) ([]Article, int64, int) {
 
 //编辑分类
 func EditCate(id int, data *Category) int {
-	var cate Category
+	var cate,other Category
 	var maps = make(map[string]interface{})
 	maps["name"] = data.Name
+	db.Select("id").Where("name = ?", data.Name).First(&other)
+	if other.ID >0 && other.ID != uint(id){
+		return errmsg.ERROR_CATENAME_USED
+	}
 	err := db.Model(&cate).Where("id = ? ", id).Updates(maps).Error
 	if err != nil {
 		return errmsg.ERROR

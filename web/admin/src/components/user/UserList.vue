@@ -13,7 +13,7 @@
           ></a-input-search>
         </a-col>
         <a-col :span="4">
-          <a-button type="primary" @click="addUserModalVisible = true">新增</a-button>
+          <a-button type="primary" @click="addUserclick">新增</a-button>
         </a-col>
       </a-row>
       <a-table
@@ -26,22 +26,22 @@
       >
         <template slot="roleslot" slot-scope="text">{{ text == 1 ? '管理员' : '订阅者' }}</template>
         <template slot="btnslot" slot-scope="record">
-          <a-button type="primary" @click="edituserclick(record.ID)" style="margin-right:15px">编辑</a-button>
+          <a-button type="primary" @click="editUserclick(record.ID)" style="margin-right:15px">编辑</a-button>
           <a-button type="danger" @click="deleteUser(record.ID)">删除</a-button>
         </template>
       </a-table>
     </a-card>
     <!-- 新增用户 -->
     <a-modal :closable="false" :visible="addUserModalVisible" title="新增用户" @ok="AddUserOk" @cancel="AddUserCancel">
-      <a-form-model ref="refadduser" :rules="addrules" :model="userInfo">
+      <a-form-model ref="refaddUser" :rules="addrules" :model="UserInfo">
         <a-form-model-item label="用户名" prop="username">
-          <a-input v-model="userInfo.username" placeholder="请输入用户名"></a-input>
+          <a-input v-model="UserInfo.username" placeholder="请输入用户名"></a-input>
         </a-form-model-item>
         <a-form-model-item hasFeedback label="密码" prop="password">
-          <a-input-password v-model="userInfo.password" placeholder="请输入密码"></a-input-password>
+          <a-input-password v-model="UserInfo.password" placeholder="请输入密码"></a-input-password>
         </a-form-model-item>
         <a-form-model-item hasFeedback label="确认密码" prop="checkpass">
-          <a-input-password v-model="userInfo.checkpass" placeholder="请重新输入密码"></a-input-password>
+          <a-input-password v-model="UserInfo.checkpass" placeholder="请重新输入密码"></a-input-password>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -54,9 +54,9 @@
       @ok="EditUserOk"
       @cancel="EditUserCancel"
     >
-      <a-form-model ref="refedituser" :rules="editrules" :model="userInfo">
+      <a-form-model ref="refeditUser" :rules="editrules" :model="UserInfo">
         <a-form-model-item label="用户名" prop="username">
-          <a-input v-model="userInfo.username" placeholder="请输入用户名"></a-input>
+          <a-input v-model="UserInfo.username" placeholder="请输入用户名"></a-input>
         </a-form-model-item>
 
         <a-form-model-item label="是否为管理员" prop="role">
@@ -124,7 +124,7 @@ export default {
       },
       addUserModalVisible: false,
       editUserModalVisible: false,
-      userInfo: {
+      UserInfo: {
         id: 0,
         username: '',
         password: '',
@@ -146,7 +146,7 @@ export default {
               if (value === '') {
                 callback(new Error('请重复输入密码'))
               } else {
-                if (this.userInfo.checkpass !== this.userInfo.password) {
+                if (this.UserInfo.checkpass !== this.UserInfo.password) {
                   callback(new Error('两次密码输入不同'))
                 }
                 callback()
@@ -169,7 +169,7 @@ export default {
   },
   computed: {
     IsAdmin: function () {
-      if (this.userInfo.role === 1) {
+      if (this.UserInfo.role === 1) {
         return true
       } else {
         return false
@@ -242,15 +242,20 @@ export default {
       })
     },
     //添加用户
+    addUserclick(){
+      this.UserInfo.username=""
+      this.UserInfo.password=""
+      this.addUserModalVisible=true
+    },
     AddUserOk() {
-      this.$refs.refadduser.validate(async valid => {
+      this.$refs.refaddUser.validate(async valid => {
         if (!valid) {
           return this.$message.error('输入数据不合法')
         } else {
           const { data: res } = await this.$http.post('user/add', {
-            username: this.userInfo.username,
-            password: this.userInfo.password,
-            role: parseInt(this.userInfo.role)
+            username: this.UserInfo.username,
+            password: this.UserInfo.password,
+            role: parseInt(this.UserInfo.role)
           })
 
           if (res.status != 200) {
@@ -264,31 +269,30 @@ export default {
       })
     },
     AddUserCancel() {
-      this.$refs.refadduser.resetFields()
+      this.$refs.refaddUser.resetFields()
       this.addUserModalVisible = false
     },
     adminChange(checked) {
       if (checked) {
-        this.userInfo.role = 1
+        this.UserInfo.role = 1
       } else {
-        this.userInfo.role = 2
+        this.UserInfo.role = 2
       }
     },
     //编辑用户
-    async edituserclick(id) {
+    async editUserclick(id) {
       const { data: res } = await this.$http.get(`user/${id}`)
-      this.userInfo.username=res.data.username
-      this.userInfo.role = res.data.role
+      this.UserInfo=res.data
       this.editUserModalVisible = true
     },
     EditUserOk() {
-      this.$refs.refedituser.validate(async valid => {
+      this.$refs.refeditUser.validate(async valid => {
         if (!valid) {
           return this.$message.error('输入数据不合法')
         } else {
-          const { data: res } = await this.$http.put(`user/${parseInt(this.userInfo.id)}`, {
-            username: this.userInfo.username,
-            role: parseInt(this.userInfo.role)
+          const { data: res } = await this.$http.put(`user/${parseInt(this.UserInfo.id)}`, {
+            username: this.UserInfo.username,
+            role: parseInt(this.UserInfo.role)
           })
 
           if (res.status != 200) {
@@ -303,7 +307,7 @@ export default {
     },
     EditUserCancel() {
       this.$message.info('编辑已取消')
-      this.$refs.refedituser.resetFields()
+      this.$refs.refeditUser.resetFields()
       this.editUserModalVisible = false
     }
   }
