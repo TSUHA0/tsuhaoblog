@@ -25,7 +25,7 @@
         bordered
       >
         <template slot="roleslot" slot-scope="text">{{ text == 1 ? '管理员' : '订阅者' }}</template>
-        <template slot="btnslot" slot-scope="record">
+        <template class="actionslot" slot="btnslot" slot-scope="record">
           <a-button type="primary" @click="editUserclick(record.ID)" style="margin-right:15px">编辑</a-button>
           <a-button type="danger" @click="deleteUser(record.ID)">删除</a-button>
         </template>
@@ -33,15 +33,15 @@
     </a-card>
     <!-- 新增用户 -->
     <a-modal :closable="false" :visible="addUserModalVisible" title="新增用户" @ok="AddUserOk" @cancel="AddUserCancel">
-      <a-form-model ref="refaddUser" :rules="addrules" :model="UserInfo">
+      <a-form-model ref="refaddUser" :rules="addrules" :model="newUser">
         <a-form-model-item label="用户名" prop="username">
-          <a-input v-model="UserInfo.username" placeholder="请输入用户名"></a-input>
+          <a-input v-model="newUser.username" placeholder="请输入用户名"></a-input>
         </a-form-model-item>
         <a-form-model-item hasFeedback label="密码" prop="password">
-          <a-input-password v-model="UserInfo.password" placeholder="请输入密码"></a-input-password>
+          <a-input-password v-model="newUser.password" placeholder="请输入密码"></a-input-password>
         </a-form-model-item>
         <a-form-model-item hasFeedback label="确认密码" prop="checkpass">
-          <a-input-password v-model="UserInfo.checkpass" placeholder="请重新输入密码"></a-input-password>
+          <a-input-password v-model="newUser.checkpass" placeholder="请重新输入密码"></a-input-password>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -130,6 +130,17 @@ export default {
         password: '',
         checkpass: '',
         role: 2
+      },
+      newUser: {
+        username: '',
+        password: '',
+        role: 2,
+        checkPass: '',
+      },
+      changePassword: {
+        id: 0,
+        password: '',
+        checkPass: '',
       },
       addrules: {
         username: [
@@ -243,8 +254,6 @@ export default {
     },
     //添加用户
     addUserclick(){
-      this.UserInfo.username=""
-      this.UserInfo.password=""
       this.addUserModalVisible=true
     },
     AddUserOk() {
@@ -253,9 +262,9 @@ export default {
           return this.$message.error('输入数据不合法')
         } else {
           const { data: res } = await this.$http.post('user/add', {
-            username: this.UserInfo.username,
-            password: this.UserInfo.password,
-            role: parseInt(this.UserInfo.role)
+            username: this.newUser.username,
+            password: this.newUser.password,
+            role: parseInt(this.newUser.role)
           })
 
           if (res.status != 200) {
@@ -314,4 +323,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.actionslot{
+  display: flex;
+  justify-content: center;
+}
+</style>

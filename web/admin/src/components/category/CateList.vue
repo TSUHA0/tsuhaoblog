@@ -94,9 +94,6 @@ export default {
       CateInfo: {
         id: 0,
         name: '',
-        password: '',
-        checkpass: '',
-        role: 2
       },
       addrules: {
         name: [

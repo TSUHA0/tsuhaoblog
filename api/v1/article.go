@@ -34,6 +34,9 @@ func GetArt(c *gin.Context) {
 
 //查询文章列表
 func GetArtList(c *gin.Context) {
+	var art []model.Article
+	var total int64
+	title := c.Query("title")
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
@@ -47,7 +50,12 @@ func GetArtList(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = 1
 	}
-	art,total,code:=model.GetArtList(pageSize,pageNum)
+
+	if title == ""{
+		art,total,code=model.GetArtList(pageSize,pageNum)
+	}else{
+		art,total,code=model.SearchArt(title,pageSize,pageNum)
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
 		"status":    code,
@@ -70,7 +78,7 @@ func EditArt(c *gin.Context) {
 	})
 }
 
-//删除文章z
+//删除文章
 func DeleteArt(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code = model.DeleteArt(id)
