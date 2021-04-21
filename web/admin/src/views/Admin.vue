@@ -4,7 +4,10 @@
     <a-layout>
           <Header></Header>
       <a-layout-content>
-          <router-view></router-view>
+          <!-- 设置key可以帮助刷新页面，使缓存信息及时更新，
+          如果不设置，就会出现编写文章界面更新了但是仍然不跳转的现象
+          比如/admin/addart/2 直接修改为/admin/addart/就不会刷新 -->
+          <router-view :key="$route.path"></router-view>
       </a-layout-content>
         <Footer></Footer>
     </a-layout>

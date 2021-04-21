@@ -4,6 +4,11 @@ import router from './router'
 import './plugin/antui'
 import './plugin/http'
 
+//markdown编辑器
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
+Vue.use(mavonEditor)
 
 Vue.config.productionTip = false
 

@@ -14,7 +14,8 @@ import {
   ConfigProvider,
   Modal,
   Select,
-  Switch
+  Switch,
+  Upload
 } from 'ant-design-vue'
 
 Vue.prototype.$message = message
@@ -40,3 +41,4 @@ Vue.use(ConfigProvider)
 Vue.use(Modal) 
 Vue.use(Select)
 Vue.use(Switch)
+Vue.use(Upload)

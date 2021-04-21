@@ -69,7 +69,7 @@ func GetArtList(pageSize int, pageNum int) ([]Article, int64,int) {
 	var art []Article
 	var total int64
 	err = db.Select("article.id, title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").
-		Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("Created_At DESC").Joins("Category").
+		Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("Updated_At DESC").Joins("Category").
 		Find(&art).Error
 	// 单独计数
 	db.Model(&art).Count(&total)
