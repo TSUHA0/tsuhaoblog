@@ -9,7 +9,7 @@
     <v-tabs show-arrows>
       <v-tabs-slider color="red"></v-tabs-slider>
       <v-tab @click="backhome">主页</v-tab>
-      <v-tab v-for="item in catelist" :key="item.id">
+      <v-tab v-for="item in catelist" :key="item.id" @click="$router.push(`/category/${item.id}`)">
         {{ item.name }}
       </v-tab>
     </v-tabs>
@@ -39,6 +39,7 @@
         rounded
         black
         solo-inverted
+        placeholder="请输入文章标题查找"
       ></v-text-field> 
     </v-responsive>
   </v-app-bar>

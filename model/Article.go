@@ -65,7 +65,7 @@ func GetArt(id int) (Article, int) {
 }
 
 //查询文章列表
-func GetArtList(pageSize int, pageNum int) ([]Article, int64,int) {
+func GetArtList(pageSize int, pageNum int) ([]Article, int64, int) {
 	var art []Article
 	var total int64
 	err = db.Select("article.id, title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").
@@ -76,7 +76,7 @@ func GetArtList(pageSize int, pageNum int) ([]Article, int64,int) {
 	if err != nil {
 		return nil, 0, errmsg.ERROR
 	}
-	return art,total, errmsg.SUCCSE
+	return art, total, errmsg.SUCCSE
 }
 
 //搜索文章标题
@@ -86,7 +86,7 @@ func SearchArt(title string, pageSize int, pageNum int) ([]Article, int64, int) 
 	var total int64
 	err = db.Select("article.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").
 		Limit(pageSize).Offset((pageNum-1)*pageSize).Order("Created_At DESC").Joins("Category").
-		Where("title LIKE ?", title+"%").Find(&articleList).Count(&total).Error
+		Where("title LIKE ?", "%"+title+"%").Find(&articleList).Count(&total).Error
 
 	if err != nil {
 		return nil, 0, errmsg.ERROR
