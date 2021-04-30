@@ -23,11 +23,8 @@
       label="关灯"
       persistent-hint
     ></v-switch>
-    <v-btn icon>
-      <v-icon>mdi-heart</v-icon>
-    </v-btn>
 
-    <v-btn icon>
+    <v-btn icon @click="$router.push(`/search/${title}`)">
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
@@ -40,6 +37,7 @@
         black
         solo-inverted
         placeholder="请输入文章标题查找"
+        v-model="title"
       ></v-text-field> 
     </v-responsive>
   </v-app-bar>
@@ -49,6 +47,7 @@ export default {
   data() {
     return {
       catelist: [],
+      title:"",
     };
   },
   created() {
@@ -62,6 +61,9 @@ export default {
     backhome() {
       this.$router.push("/");
     },
+    search(){
+      console.log(this.title);
+    }
   },
 };
 </script>
