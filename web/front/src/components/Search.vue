@@ -30,17 +30,17 @@
             <v-divider class="mx-4"></v-divider>
             <v-card-text class="d-flex align-center">
               <div class="d-flex align-center">
-                <v-icon class="mr-1" small>{{ "mdi-calendar-month" }}</v-icon>
+                <v-icon class="mr-1" small>{{ 'mdi-calendar-month' }}</v-icon>
                 <span>{{
-                  item.CreatedAt | dateformat("YYYY-MM-DD HH:MM")
+                  item.CreatedAt | dateformat('YYYY-MM-DD HH:MM')
                 }}</span>
               </div>
               <div class="mx-4 d-flex align-center">
-                <v-icon class="mr-1" small>{{ "mdi-comment" }}</v-icon>
+                <v-icon class="mr-1" small>{{ 'mdi-comment' }}</v-icon>
                 <span>{{ item.comment_count }}</span>
               </div>
               <div class="mx-1 d-flex align-center">
-                <v-icon class="mr-1" small>{{ "mdi-eye" }}</v-icon>
+                <v-icon class="mr-1" small>{{ 'mdi-eye' }}</v-icon>
                 <span>{{ item.read_count }}</span>
               </div>
             </v-card-text>
@@ -62,20 +62,20 @@
 </template>
 <script>
 export default {
-  props: ["title"],
+  props: ['title'],
   data() {
     return {
       artList: [],
       queryParam: {
         pagesize: 5,
-        pagenum: 1,
+        pagenum: 1
       },
       total: 0,
-      isLoad: false,
-    };
+      isLoad: false
+    }
   },
   mounted() {
-    this.getArtList();
+    this.getArtList()
   },
   methods: {
     // 获取文章列表
@@ -84,15 +84,15 @@ export default {
         params: {
           title: this.title,
           pagesize: this.queryParam.pagesize,
-          pagenum: this.queryParam.pagenum,
-        },
-      });
-      this.artList = res.data;
-      this.total = res.total;
-      this.isLoad = true;
-    },
-  },
-};
+          pagenum: this.queryParam.pagenum
+        }
+      })
+      this.artList = res.data
+      this.total = res.total
+      this.isLoad = true
+    }
+  }
+}
 </script>
 <style scoped>
 .nodate {

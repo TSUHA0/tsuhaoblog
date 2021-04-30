@@ -6,16 +6,16 @@
     <div class="d-flex justify-center align-center">
       <div class="d-flex mx-10 justify-center">
         <v-icon class="mr-1" color="indigo" small>
-          {{ "mdi-calendar-month" }}
+          {{ 'mdi-calendar-month' }}
         </v-icon>
-        <span>{{ artInfo.CreatedAt | dateformat("YYYY-MM-DD") }}</span>
+        <span>{{ artInfo.CreatedAt | dateformat('YYYY-MM-DD') }}</span>
       </div>
       <div class="d-flex mr-10 justify-center">
-        <v-icon class="mr-1" color="pink" small>{{ "mdi-comment" }}</v-icon>
+        <v-icon class="mr-1" color="pink" small>{{ 'mdi-comment' }}</v-icon>
         <span>{{ total }}</span>
       </div>
       <div class="d-flex mr-10 justify-center">
-        <v-icon class="mr-1" color="green" small>{{ "mdi-eye" }}</v-icon>
+        <v-icon class="mr-1" color="green" small>{{ 'mdi-eye' }}</v-icon>
         <span>{{ artInfo.read_count }}</span>
       </div>
     </div>
@@ -35,34 +35,34 @@
 </template>
 <script>
 export default {
-  props: ["id"],
+  props: ['id'],
   data() {
     return {
       artInfo: {},
       commentList: [],
       total: 0,
       headers: {
-        username: "",
-        user_id: 0,
+        username: '',
+        user_id: 0
       },
       queryParam: {
         pagesize: 5,
-        pagenum: 1,
-      },
-    };
+        pagenum: 1
+      }
+    }
   },
   created() {
-    this.getArtInfo();
-    this.headers = {};
+    this.getArtInfo()
+    this.headers = {}
   },
   methods: {
     // 查询文章
     async getArtInfo() {
-      const { data: res } = await this.$http.get(`art/${this.id}`);
-      this.artInfo = res.data;
-    },
-  },
-};
+      const { data: res } = await this.$http.get(`art/${this.id}`)
+      this.artInfo = res.data
+    }
+  }
+}
 </script>
 <style scoped>
 .content >>> div,

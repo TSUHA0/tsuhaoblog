@@ -1,6 +1,5 @@
 <template>
   <v-app-bar app>
-    
     <!-- 
     <v-container  class="py-0 fill-height">
       <v-btn v-for="item in catelist" :key=item.id class="mr-2" text>{{item.name}}</v-btn>
@@ -9,7 +8,11 @@
     <v-tabs show-arrows>
       <v-tabs-slider color="red"></v-tabs-slider>
       <v-tab @click="backhome">主页</v-tab>
-      <v-tab v-for="item in catelist" :key="item.id" @click="$router.push(`/category/${item.id}`)">
+      <v-tab
+        v-for="item in catelist"
+        :key="item.id"
+        @click="$router.push(`/category/${item.id}`)"
+      >
         {{ item.name }}
       </v-tab>
     </v-tabs>
@@ -23,6 +26,11 @@
       label="关灯"
       persistent-hint
     ></v-switch>
+    
+<!-- @click="pushadmin" -->
+    <v-btn icon @click="pushadmin">
+      <v-icon>mdi-account-key</v-icon>
+    </v-btn>
 
     <v-btn icon @click="$router.push(`/search/${title}`)">
       <v-icon>mdi-magnify</v-icon>
@@ -38,7 +46,7 @@
         solo-inverted
         placeholder="请输入文章标题查找"
         v-model="title"
-      ></v-text-field> 
+      ></v-text-field>
     </v-responsive>
   </v-app-bar>
 </template>
@@ -47,24 +55,27 @@ export default {
   data() {
     return {
       catelist: [],
-      title:"",
-    };
+      title: ''
+    }
   },
   created() {
-    this.getCatelist();
+    this.getCatelist()
   },
   methods: {
     async getCatelist() {
-      const { data: res } = await this.$http.get("cates");
-      this.catelist = res.data;
+      const { data: res } = await this.$http.get('cates')
+      this.catelist = res.data
     },
     backhome() {
-      this.$router.push("/");
+      this.$router.push('/')
     },
-    search(){
-      console.log(this.title);
+    pushadmin(){
+      let domain = window.location.host
+      console.log('domain: ', domain);
+      window.location.href = "http://"+domain+"/admin";
     }
-  },
-};
+
+  }
+}
 </script>
 <style></style>

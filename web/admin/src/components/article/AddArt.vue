@@ -156,10 +156,8 @@ export default {
       if (info.file.status === 'done') {
         let s = info.file.response.status
         if (s === 1004 || s === 1005 || s === 1006 || s === 1007) return this.$message.error(info.file.response.message)
-        console.log('info.file.response.status: ', info.file.response)
         this.$message.success(`图片上传成功`)
         this.artInfo.img = info.file.response.url
-        console.log('info.file.: ', info.file)
       } else if (info.file.status === 'error') {
         this.$message.error(`图片上传失败`)
       }

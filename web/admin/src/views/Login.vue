@@ -56,7 +56,6 @@ export default {
           return false
         } else {
           const { data: res } = await this.$http.post('login', this.formdata)
-          console.log(res)
           if (res.code != 200) {
             this.$message.error(res.message)
             return

@@ -68,11 +68,11 @@ func GetCateArt(Cid int, pageSize int, pageNum int) ([]Article, int64, int) {
 
 //编辑分类
 func EditCate(id int, data *Category) int {
-	var cate,other Category
+	var cate, other Category
 	var maps = make(map[string]interface{})
 	maps["name"] = data.Name
 	db.Select("id").Where("name = ?", data.Name).First(&other)
-	if other.ID >0 && other.ID != uint(id){
+	if other.ID > 0 && other.ID != uint(id) {
 		return errmsg.ERROR_CATENAME_USED
 	}
 	err := db.Model(&cate).Where("id = ? ", id).Updates(maps).Error

@@ -14,9 +14,7 @@
       <v-col>
         <v-card-title>
           <v-chip color="pink" outlined label class="mr-3 white--text">
-            {{
-            item.Category.name
-            }}
+            {{ item.Category.name }}
           </v-chip>
           <div>{{ item.title }}</div>
         </v-card-title>
@@ -35,7 +33,6 @@
             <v-icon class="mr-1" small>{{ 'mdi-eye' }}</v-icon>
             <span>{{ item.read_count }}</span>
           </div>
-
         </v-card-text>
       </v-col>
     </v-card>
