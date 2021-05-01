@@ -1,18 +1,38 @@
 package routes
 
 import (
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	v1 "tsuhaoblog/api/v1"
 	"tsuhaoblog/middleware"
 	"tsuhaoblog/utils"
 )
 
+func createMyRender() multitemplate.Renderer {
+	p := multitemplate.NewRenderer()
+	p.AddFromFiles("admin", "web/admin/dist/index.html")
+	p.AddFromFiles("front", "web/front/dist/index.html")
+	return p
+}
+
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
-	r := gin.Default()
-	r.Use(middleware.Logger(), middleware.Cors())
+	r := gin.New()
+	r.HTMLRender = createMyRender()
+	r.Use(middleware.Logger())
+	r.Use(gin.Recovery())
+	r.Use(middleware.Cors())
 	r.Static("/static", "./web/front/dist/")
 	r.Static("/admin", "./web/admin/dist")
+
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(200, "front", nil)
+	})
+
+	r.GET("/admin", func(c *gin.Context) {
+		c.HTML(200, "admin", nil)
+	})
+
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtToken())
 	{
