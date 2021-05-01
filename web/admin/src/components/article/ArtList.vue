@@ -12,16 +12,12 @@
           />
         </a-col>
         <a-col :span="4">
-          <a-button type="primary" @click="$router.push('/admin/addart')">新增</a-button>
+          <a-button type="primary" @click="$router.push('/addart')">新增</a-button>
         </a-col>
 
         <a-col :span="3">
           <a-select placeholder="请选择分类" style="width: 200px" @change="CateChange">
-            <a-select-option
-              v-for="item in Catelist"
-              :key="item.id"
-              :value="item.id"
-            >{{ item.name }}</a-select-option>
+            <a-select-option v-for="item in Catelist" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span="1">
@@ -47,15 +43,12 @@
               type="primary"
               icon="edit"
               style="margin-right: 15px"
-              @click="$router.push(`/admin/addart/${data.ID}`)"
-            >编辑</a-button>
-            <a-button
-              size="small"
-              type="danger"
-              icon="delete"
-              style="margin-right: 15px"
-              @click="deleteArt(data.ID)"
-            >删除</a-button>
+              @click="$router.push(`/addart/${data.ID}`)"
+              >编辑</a-button
+            >
+            <a-button size="small" type="danger" icon="delete" style="margin-right: 15px" @click="deleteArt(data.ID)"
+              >删除</a-button
+            >
           </div>
         </template>
       </a-table>
@@ -72,7 +65,7 @@ const columns = [
     dataIndex: 'ID',
     width: '5%',
     key: 'id',
-    align: 'center',
+    align: 'center'
   },
   {
     title: '更新日期',
@@ -80,30 +73,30 @@ const columns = [
     width: '10%',
     key: 'UpdatedAt',
     align: 'center',
-    customRender: (val) => {
+    customRender: val => {
       return val ? day(val).format('YYYY年MM月DD日 HH:mm') : '暂无'
-    },
+    }
   },
   {
     title: '分类',
     dataIndex: 'Category.name',
     width: '5%',
     key: 'name',
-    align: 'center',
+    align: 'center'
   },
   {
     title: '文章标题',
     dataIndex: 'title',
     width: '15%',
     key: 'title',
-    align: 'center',
+    align: 'center'
   },
   {
     title: '文章描述',
     dataIndex: 'desc',
     width: '20%',
     key: 'desc',
-    align: 'center',
+    align: 'center'
   },
   {
     title: '缩略图',
@@ -111,15 +104,15 @@ const columns = [
     width: '20%',
     key: 'img',
     align: 'center',
-    scopedSlots: { customRender: 'img' },
+    scopedSlots: { customRender: 'img' }
   },
   {
     title: '操作',
     width: '15%',
     key: 'action',
     align: 'center',
-    scopedSlots: { customRender: 'action' },
-  },
+    scopedSlots: { customRender: 'action' }
+  }
 ]
 
 export default {
@@ -130,7 +123,7 @@ export default {
         pageSize: 5,
         total: 0,
         showSizeChanger: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: total => `共${total}条`
       },
       Artlist: [],
       Catelist: [],
@@ -138,8 +131,8 @@ export default {
       queryParam: {
         title: '',
         pagesize: 5,
-        pagenum: 1,
-      },
+        pagenum: 1
+      }
     }
   },
   created() {
@@ -149,15 +142,15 @@ export default {
   methods: {
     // 获取文章列表
     async getArtList() {
-      const { data: res } = await this.$http.get('arts', {
+      const { data: res } = await this.$http.get(`arts`, {
         params: {
           title: this.queryParam.title,
           pagesize: this.queryParam.pagesize,
-          pagenum: this.queryParam.pagenum,
-        },
+          pagenum: this.queryParam.pagenum
+        }
       })
       if (res.status !== 200) {
-        if (res.status === 1004 || res.status ===1005 || res.status ===1006 || res.status ===1007) {
+        if (res.status === 1004 || res.status === 1005 || res.status === 1006 || res.status === 1007) {
           window.sessionStorage.clear()
           this.$router.push('/login')
         }
@@ -175,7 +168,9 @@ export default {
       this.pagination.total = res.total
     },
     // 更改分页
-    handleTableChange(pagination) {
+    handleTableChange(pagination, filters, sorter) {
+      filters
+      sorter
       var pager = { ...this.pagination }
       pager.current = pagination.current
       pager.pageSize = pagination.pageSize
@@ -202,7 +197,7 @@ export default {
         },
         onCancel: () => {
           this.$message.info('已取消删除')
-        },
+        }
       })
     },
     // 查询分类下的文章
@@ -210,14 +205,14 @@ export default {
       this.getCateArt(value)
     },
     async getCateArt(id) {
-      const { data: res } = await this.$http.get(`cateArt/${id}`, {
-        params: { pagesize: this.queryParam.pagesize, pagenum: this.queryParam.pagenum },
+       const { data: res } = await this.$http.get(`cateArt/${id}`, {
+        params: { pagesize: this.queryParam.pagesize, pagenum: this.queryParam.pagenum }
       })
       if (res.status !== 200) return this.$message.error(res.message)
       this.Artlist = res.data
       this.pagination.total = res.total
-    },
-  },
+    }
+  }
 }
 </script>
 

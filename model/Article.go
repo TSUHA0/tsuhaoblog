@@ -65,7 +65,7 @@ func GetArt(id int) (Article, int) {
 }
 
 //查询文章列表
-func GetArtList(pageSize int, pageNum int) ([]Article, int64, int) {
+func GetArtList(pageSize int, pageNum int) ([]Article, int, int64) {
 	var art []Article
 	var total int64
 	err = db.Select("article.id, title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").
@@ -74,22 +74,24 @@ func GetArtList(pageSize int, pageNum int) ([]Article, int64, int) {
 	// 单独计数
 	db.Model(&art).Count(&total)
 	if err != nil {
-		return nil, 0, errmsg.ERROR
+		return nil, errmsg.ERROR, 0
 	}
-	return art, total, errmsg.SUCCSE
+	return art, errmsg.SUCCSE, total
 }
 
-//搜索文章标题
-func SearchArt(title string, pageSize int, pageNum int) ([]Article, int64, int) {
+// 搜索文章标题
+func SearchArtile(title string, pageSize int, pageNum int) ([]Article, int, int64) {
 	var articleList []Article
 	var err error
 	var total int64
-	err = db.Select("article.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").
-		Limit(pageSize).Offset((pageNum-1)*pageSize).Order("Created_At DESC").Joins("Category").
-		Where("title LIKE ?", "%"+title+"%").Find(&articleList).Count(&total).Error
+	err = db.Select("article.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, category.name").Limit(pageSize).Offset((pageNum-1)*pageSize).Order("Created_At DESC").Joins("Category").Where("title LIKE ?",
+		title+"%",
+	).Find(&articleList).Count(&total).Error
+	// 单独计数
+	//db.Model(&articleList).Count(&total)
 
 	if err != nil {
-		return nil, 0, errmsg.ERROR
+		return nil, errmsg.ERROR, 0
 	}
-	return articleList, total, errmsg.SUCCSE
+	return articleList, errmsg.SUCCSE, total
 }

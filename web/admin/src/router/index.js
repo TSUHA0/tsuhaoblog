@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Admin from '../views/Admin.vue'
-import '../assets/css/style.css'
+
 
 
 // 路由重复点击捕获错误
@@ -23,20 +23,63 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
+    meta: {
+      title: '请登录'
+    },
     component: Login
   },
   {
-    path: '/admin',
+    path: '/',
     name: 'admin',
+    meta: {
+      title: 'TsuhaoBlog 后台管理页面'
+    },
     component: Admin,
     children: [
-      { path: 'index', component: Index },
-      { path: 'addart', component: AddArt },
-      { path: 'addart/:id', component: AddArt},
-      { path: 'artlist', component: ArtList },
-      { path: 'catelist', component: CateList },
-      { path: 'userlist', component: UserList }
+      {
+        path: 'index',
+        component: Index,
+        meta: {
+          title: 'TsuhaoBlog 后台管理页面'
+        }
+      },
+      {
+        path: 'addart',
+        component: AddArt,
+        meta: {
+          title: '新增文章'
+        }
+      },
+      {
+        path: 'addart/:id',
+        component: AddArt,
+        meta: {
+          title: '编辑文章'
+        },
+        props: true
+      },
+      {
+        path: 'artlist',
+        component: ArtList,
+        meta: {
+          title: '文章列表'
+        }
+      },
+      {
+        path: 'catelist',
+        component: CateList,
+        meta: {
+          title: '分类列表'
+        }
+      },
+      {
+        path: 'userlist',
+        component: UserList,
+        meta: {
+          title: '用户列表'
+        }
+      },
     ]
   }
 ]

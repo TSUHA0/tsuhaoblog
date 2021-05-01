@@ -15,7 +15,7 @@ func AddArt(c *gin.Context) {
 	code = model.AddArt(&art)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"status":    code,
+		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -27,7 +27,7 @@ func GetArt(c *gin.Context) {
 	art, code = model.GetArt(id)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"status":    code,
+		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -51,15 +51,15 @@ func GetArtList(c *gin.Context) {
 		pageNum = 1
 	}
 
-	if title == ""{
-		art,total,code=model.GetArtList(pageSize,pageNum)
-	}else{
-		art,total,code=model.SearchArt(title,pageSize,pageNum)
+	if len(title) == 0 {
+		art, code, total = model.GetArtList(pageSize, pageNum)
+	} else {
+		art, code, total = model.SearchArtile(title, pageSize, pageNum)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"status":    code,
-		"total":	total,
+		"status":  code,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 
@@ -73,7 +73,7 @@ func EditArt(c *gin.Context) {
 	code = model.EditArt(id, &art)
 	c.JSON(http.StatusOK, gin.H{
 		"data":    art,
-		"status":    code,
+		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -83,7 +83,7 @@ func DeleteArt(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code = model.DeleteArt(id)
 	c.JSON(http.StatusOK, gin.H{
-		"status":    code,
+		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
