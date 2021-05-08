@@ -97,7 +97,7 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     return next()
   }
-  if (!token && to.path == '/admin') {
+  if (!token && to.path == '/') {
     next('/login')
   } else {
     next()

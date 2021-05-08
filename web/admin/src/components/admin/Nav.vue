@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     gotopage(item) {
-      this.$router.push('/admin/'+item.key)
+      this.$router.push('/'+item.key)
     }
   }
 }
