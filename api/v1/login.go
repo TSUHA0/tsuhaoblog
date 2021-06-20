@@ -24,7 +24,6 @@ func Login(c *gin.Context) {
 			"message": errmsg.GetErrMsg(code),
 		})
 	}
-
 }
 
 func setToken(c *gin.Context, user model.User) {

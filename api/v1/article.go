@@ -37,8 +37,8 @@ func GetArtList(c *gin.Context) {
 	var art []model.Article
 	var total int64
 	title := c.Query("title")
-	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 
 	switch {
 	case pageSize >= 100:

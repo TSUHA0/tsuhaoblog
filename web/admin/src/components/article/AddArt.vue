@@ -98,7 +98,7 @@ export default {
       var formdata = new FormData()
       formdata.append('file', $file)
       axios({
-        url: Url + 'upload',
+        url: Url + 'upload',  
         method: 'post',
         data: formdata,
         headers: {
